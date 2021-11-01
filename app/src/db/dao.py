@@ -5,12 +5,13 @@
 # U: Update
 # D: Delete
 import typing as t
+from typing_extensions import ParamSpecArgs
 from mysql.connector import connect, cursor
 from mysql.connector.connection import MySQLConnection
 import config
 from app.src.domain.Investor import Investor
 from app.src.domain.Account import Account
-from app.src.domain.Portfolio import Portfolio
+from app.src.domain.Portfolio import Portfolio 
 
 def get_cnx() -> MySQLConnection:
     return connect(**config.dbparams)
@@ -116,56 +117,183 @@ def update_investor_status(id: int, status: str) -> None:
     Account DAO functions
 '''
 def get_all_accounts() -> list[Account]:
-    # Code goes here
-    pass
+    accounts: list[Account] = []
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor(dictionary=True) 
+    select: str = 'select * from Account'
+    curs.execute(select)
+    rows: list[dict] = curs.fetchall()
+    if len(rows) == 0:
+        bt_cnx.close()  
+        return []
+    accounts = []
+    for row in rows:
+        accounts.append(Account(row['acct_num'], row['investor_id'], row['acct_bal'], row['acct_type']))
+    bt_cnx.close()
+    return accounts
+pass
 
 def get_account_by_id(id: int) -> Account:
-    # Code goes here
-    pass
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor(dictionary=True)
+    select: str = 'select * from accounts where id = %s'
+    curs.execute(select, (id,))
+    row = curs.fetchone()
+    if len(row) == 0:
+        bt_cnx.close()  
+        return []
+    account = []
+    account = Account(row['acct_num'], row['investor_id'], row['acct_bal'], row['acct_type'])
+    return account
+pass
 
-def get_accounts_by_investor_id(id: int) -> list[Account]:
-    # Code goes here
-    pass
+def get_accounts_by_investor_id(investor_id: int) -> list[Account]:
+    accounts: list[Investor] = []
+    bt_cnx = get_cnx()
+    curs = bt_cnx.curs(dictionary=True)
+    select: str = 'select * from accounts where investor_id = %s'
+    curs.execute(select, (investor_id,))
+    rows = curs.fetchall()
+    if len(rows) == 0:
+        bt_cnx.close()  
+        return []
+    accounts = []  
+    for row in rows:
+            accounts.append(row['acct_num'], row['investor_id'], row['acct_bal'], row['acct_type'])
+    bt_cnx.close()
+    return accounts
+pass
 
-def delete_account(id: int) -> None:
-    # Code goes here
-    pass
+def delete_account(investor_id: int) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    delete = 'delete from account where investor_id = %s'
+    curs.execute(delete, (investor_id,))
+    bt_cnx.commit()
+    bt_cnx.close()
+pass
 
-def update_acct_balance(id: int, bal: float) -> None:
-    # Code goes here
-    pass
+def update_acct_balance(investor_id: int, acct_bal: float) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    update = 'update acct_blance set acct_bal = %s where id = %s'
+    curs.execute(update, (investor_id, acct_bal))
+    bt_cnx.commit()
+    bt_cnx.close()
+pass
 
 def create_account(account: Account) -> None:
-    # Code goes here
-    pass
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    insert = 'insert into account (acct_num, investor_id, acct_bal, acct_type) values (%s, %s, %s, %s)'
+    curs.execute(insert, (account.acct_num, account.investor_id, account.acct_bal, account.acct_type))
+    bt_cnx.commit()
+    bt_cnx.close()
+pass
 
 '''
     Portfolio DAO functions
 '''
 def get_all_portfolios() -> list[Portfolio]:
-    # code goes here
-    pass
+    portfolios: list[Portfolio] = []
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor(dictionary=True) 
+    select: str = 'select * from Portfolio'
+    curs.execute(select)
+    rows: list[dict] = curs.fetchall()
+    if len(rows) == 0:
+        bt_cnx.close()  
+        return []
+    portfolios = []
+    for row in rows:
+        portfolios.append(Portfolio(row['stock_id'], row['acct_num'], row['stock_tik'], row['stock_qty'], row['stock_pur_price'], row['fund_name'], row['fund_units'], row['unit_pur_price'], row['nav'], row['cash']))
+    bt_cnx.close()
+    return portfolios
+pass
 
-def get_porfolios_by_acct_id(acct_id: int) -> list[Portfolio]:
-    # code goes here
-    pass
+def get_porfolios_by_acct_id(acct_num: int) -> list[Portfolio]:
+    portfolios: list[Portfolio] = []
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor(dictionary=True)
+    select: str = 'select * from portfolio where acct_num = %s'
+    curs.execute(select, (acct_num,))
+    rows = curs.fetchone()
+    if len(rows) == 0:
+        bt_cnx.close()  
+        return []
+    portfolios = []
+    for row in rows:
+         portfolios = Account(row['acct_num'], row['investor_id'], row['acct_bal'], row['acct_type'])
+    return portfolios
+pass
 
 def get_portfolios_by_investor_id(investor_id: int) -> list[Portfolio]:
-    # code goes here
+    portfolios: list[Investor] = []
+    bt_cnx = get_cnx()
+    curs = bt_cnx.curs(dictionary=True)
+    select: str = 'select * from portfolios where investor_id = %s'
+    curs.execute(select, (investor_id,))
+    rows = curs.fetchall()
+    if len(rows) == 0:
+        bt_cnx.close()  
+        return []
+    portfolios = []  
+    for row in rows:
+            portfolios.append(Portfolio(row['stock_id'], row['acct_num'], row['stock_tik'], row['stock_qty'], row['stock_pur_price'], row['fund_name'], row['fund_units'], row['unit_pur_price'], row['nav'], row['cash']))
+    bt_cnx.close()
+    return portfolios
+pass
+
+def delete_portfolio(stock_id: int) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    delete = 'delete from portfolio where stock_id = %s'
+    curs.execute(delete, (stock_id,))
+    bt_cnx.commit()
+    bt_cnx.close()
+    return delete_portfolio
+pass
+
+def buy_stock(stock_tik: str, stock_pur_price: float, stock_qty: int, acct_num : int) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    insert = 'insert into portfolio (stock_tik, stock_pur_price, stock_qty, acct_num) values (%s, %s, %s,%s)'
+    curs.execute(insert, (stock_tik, stock_pur_price, stock_qty, acct_num))
+    bt_cnx.commit()
+    bt_cnx.close() #missing values account num
     pass
 
-def delete_portfolio(id: int) -> None:
-    # code goes here
-    pass
-
-def buy_stock(ticker: str, price: float, quantity: int) -> None:
-    # code goes here
-    pass
-
-def sell_stock(ticket: str, quantity: int, sale_price: float) -> None:
-    # 1. update quantity in portfolio table
-    # 2. update the account balance:
-    # Example: 10 APPL shares at $1/share with account balance $100
-    # event: sale of 2 shares for $2/share
-    # output: 8 APPLE shares at $1/share with account balance = 100 + 2 * (12 - 10) = $104
-    pass
+def sell_stock(stock_tik: str, stock_qty: int, sale_price: float) -> None:
+   def update_stock_qty(stock_tik: str, stock_qty: int) -> None:
+      bt_cnx = get_cnx()
+      curs = bt_cnx.cursor()
+      update = 'update portfolio set stock_qty = 10 where stock_tik = AAPL'
+      curs.execute(update, (stock_tik, stock_qty))
+      bt_cnx.commit()
+      bt_cnx.close()
+      print (update_stock_qty)
+   def update_acct_balance(investor_id: int, acct_bal: float) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    update = 'update acct_blance set acct_bal = 100 where id = 1'
+    curs.execute(update, (investor_id, acct_bal))
+    bt_cnx.commit()
+    bt_cnx.close()
+    print (update_acct_balance)
+   def update_stock_qty(stock_tik: str, stock_qty: int) -> None:
+      bt_cnx = get_cnx()
+      curs = bt_cnx.cursor()
+      update = 'update portfolio set stock_qty = 8 where stock_tik = AAPL'
+      curs.execute(update, (stock_tik, stock_qty))
+      bt_cnx.commit()
+      bt_cnx.close()
+      print (update_stock_qty)
+   def update_acct_balance(investor_id: int, acct_bal: float) -> None:
+    bt_cnx = get_cnx()
+    curs = bt_cnx.cursor()
+    update = 'update acct_blance set acct_bal = 104 where id = 1'
+    curs.execute(update, (investor_id, acct_bal))
+    bt_cnx.commit()
+    bt_cnx.close()
+    print (update_acct_balance)  
+pass
