@@ -7,7 +7,7 @@ import typing as t
 bp_portfolio = Blueprint('portfolio', __name__, url_prefix='/portfolio')
 
 
-@bp_portfolio.route('/get-all-portfolios')
+@bp_portfolio.route('/get-all-portfolio')
 def get_all_portfolios() -> t.List[Portfolio]:
     portfolio = dao.get_all_portfolios()
     if portfolio is None:
@@ -25,8 +25,8 @@ def get_portfolio_by_id(id: int) ->  Portfolio:
 
 
 @bp_portfolio.route('/create-portfolio/<name>/<status>', methods=['POST'])
-def create_portfolio(name, status):
-    portfolio: Portfolio = Portfolio(name, status)
+def create_portfolio(name, status) -> Portfolio:
+    portfolio = Portfolio(name, status)
     dao.create_portfolio(portfolio)
     return '', 200
 

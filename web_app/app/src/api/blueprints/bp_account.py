@@ -20,7 +20,7 @@ def get_account_by_id(id: int) -> Account:
 
 
 @bp_account.route('/get-accounts-by-investor-id/<int:investor_id>')
-def get_accounts_by_investor_id(id: int) -> t.list[Account]:
+def get_accounts_by_investor_id(id: int) -> t.List[Account]:
     account = dao.get_account_by_id(id)
     if account is None:
             return 200, []
@@ -31,7 +31,7 @@ def get_accounts_by_investor_id(id: int) -> t.list[Account]:
 @ bp_account.route('/create-account/<account_number>/<investor_id>/<balance>', methods=['POST'])
 def create_account(acct_num, investor_id, acct_bal, acct_type) -> Account:
     account = Account(acct_num, investor_id, acct_bal, acct_type)
-    dao.create_account(acct_num, investor_id, acct_bal, acct_type)
+    dao.create_account(account)
     return '', 200
 
 

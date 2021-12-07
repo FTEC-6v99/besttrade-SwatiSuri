@@ -21,8 +21,8 @@ def get_investor_by_id(id: int) -> Investor:
 
 
 @bp_investor.route('/get-investor-by-name/<name>')
-def get_investor_by_name(name: str) -> Investor:
-    investor: t.List[Investor] = dao.get_investors_by_name(name)
+def get_investor_by_name(name: str) -> t.List[Investor]:
+    investor = dao.get_investors_by_name(name)
     if investor is None:
         return 200, []
     else:
@@ -30,8 +30,8 @@ def get_investor_by_name(name: str) -> Investor:
 
 
 @ bp_investor.route('/create-new-investor/<name>/<status>', methods=['POST'])
-def create_investor(name, status, tier):
-    investor: Investor = Investor(name, status, tier)
+def create_investor(name, status, tier) -> Investor:
+    investor = Investor(name, status, tier)
     dao.create_investor(investor)
     return '', 200
 
