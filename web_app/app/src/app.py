@@ -1,7 +1,7 @@
 from flask import Flask
-from app.src.blueprints.bp_investor import bp_investor
-from app.src.blueprints.bp_account import bp_account
-from app.src.blueprints.bp_portfolio import bp_portfolio
+from app.src.api.blueprints.bp_investor import bp_investor
+from app.src.api.blueprints.bp_account import bp_account
+from app.src.api.blueprints.bp_portfolio import bp_portfolio
 
 
 app = Flask(__name__)
