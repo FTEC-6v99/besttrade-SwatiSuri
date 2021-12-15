@@ -64,7 +64,10 @@ def get_investors_by_name(name: str) -> t.list[Investor]:
     else:
         rows = cursor.fetchall()
         for row in rows:
-            investors.append(Investor(row['name'], row['status'], row['id']))
+            investors.append(Investor('Sneha Kumar','Active', 'Gold',1))
+            investors.append(Investor('Li Jung','Inactive', 'Silver',2))
+            investors.append(Investor('Chris Landon','Inactive', 'Platinum',3))
+            investors.append(Investor('Rafiq Khan','Active', 'Bronze',4))
     db_cnx.close()
     return investors
 

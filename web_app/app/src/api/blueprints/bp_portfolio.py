@@ -37,7 +37,7 @@ def update_portfolio_name(id, name):
     return '', 200
 
 
-@bp_portfolio('/delete-portfolio/<id>', methods=['DELETE'])
+@bp_portfolio.route('/delete-portfolio/<id>', methods=['DELETE'])
 def delete_portfolio(id):
     dao.delete_portfolio(id)
     return '', 200
