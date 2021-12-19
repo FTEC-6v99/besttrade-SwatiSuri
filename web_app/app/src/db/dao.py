@@ -20,7 +20,7 @@ def get_cnx() -> MySQLConnection:
     Investor DAO functions
 '''
 
-def get_all_investor() -> t.list[Investor]:
+def get_all_investor() -> t.List[Investor]:
     '''
         Get list of all investors [R]
     '''
@@ -50,7 +50,7 @@ def get_investor_by_id(id: int) -> t.Optional[Investor]:
         investor = Investor(row['name'], row['status'], row['id'])
         return investor 
 
-def get_investors_by_name(name: str) -> t.list[Investor]:
+def get_investors_by_name(name: str) -> t.List[Investor]:
     '''
         Return a list of investors for a given name [R]
     '''
@@ -64,10 +64,7 @@ def get_investors_by_name(name: str) -> t.list[Investor]:
     else:
         rows = cursor.fetchall()
         for row in rows:
-            investors.append(Investor('Sneha Kumar','Active', 'Gold',1))
-            investors.append(Investor('Li Jung','Inactive', 'Silver',2))
-            investors.append(Investor('Chris Landon','Inactive', 'Platinum',3))
-            investors.append(Investor('Rafiq Khan','Active', 'Bronze',4))
+            investors.append(row['investor_id'], row['name'], row['status'], row['tier'])
     db_cnx.close()
     return investors
 
@@ -79,7 +76,7 @@ def create_investor(investor: Investor) -> None:
     db_cnx = get_cnx()
     cursor = db_cnx.cursor()
     sql = 'insert into investor (name, status) values (%s, %s)'
-    cursor.execute(sql, (investor.name, investor.status))
+    cursor.execute(sql, (investor.name, investor.status,investor.tier))
     db_cnx.commit()
     db_cnx.close()
 
@@ -119,7 +116,7 @@ def update_investor_status(id: int, status: str) -> None:
 '''
     Account DAO functions
 '''
-def get_all_accounts() -> t.list[Account]:
+def get_all_accounts() -> t.List[Account]:
     accounts: list[Account] = []
     bt_cnx = get_cnx()
     curs = bt_cnx.cursor(dictionary=True) 
@@ -131,7 +128,7 @@ def get_all_accounts() -> t.list[Account]:
         return []
     accounts = []
     for row in rows:
-        accounts.append(Account(row['acct_num'], row['investor_id'], row['acct_bal'], row['acct_type']))
+        accounts.append(Account(['name'],['acct_num'],['investor_id'],['acct_bal'],['acct_type']))
     bt_cnx.close()
     return accounts
 pass
@@ -150,7 +147,7 @@ def get_account_by_id(id: int) -> Account:
     return account
 pass
 
-def get_accounts_by_investor_id(investor_id: int) -> t.list[Account]:
+def get_accounts_by_investor_id(investor_id: int) -> t.List[Account]:
     accounts: list[Investor] = []
     bt_cnx = get_cnx()
     curs = bt_cnx.curs(dictionary=True)
@@ -189,7 +186,7 @@ def create_account(account: Account) -> None:
     bt_cnx = get_cnx()
     curs = bt_cnx.cursor()
     insert = 'insert into account (acct_num, investor_id, acct_bal, acct_type) values (%s, %s, %s, %s)'
-    curs.execute(insert, (account.acct_num, account.investor_id, account.acct_bal, account.acct_type))
+    curs.execute(insert, (account.name, account.acct_num, account.investor_id, account.acct_bal, account.acct_type))
     bt_cnx.commit()
     bt_cnx.close()
 pass
@@ -197,7 +194,7 @@ pass
 '''
     Portfolio DAO functions
 '''
-def get_all_portfolios() -> t.list[Portfolio]:
+def get_all_portfolios() -> t.List[Portfolio]:
     portfolios: list[Portfolio] = []
     bt_cnx = get_cnx()
     curs = bt_cnx.cursor(dictionary=True) 
@@ -209,12 +206,12 @@ def get_all_portfolios() -> t.list[Portfolio]:
         return []
     portfolios = []
     for row in rows:
-        portfolios.append(Portfolio(row['stock_id'], row['acct_num'], row['stock_tik'], row['stock_qty'], row['stock_pur_price'], row['fund_name'], row['fund_units'], row['unit_pur_price'], row['nav'], row['cash']))
+        portfolios.append(Portfolio(row['stock_id'], row['name'] ,row['acct_num'], row['stock_tik'], row['stock_qty'], row['stock_pur_price'], row['fund_name'], row['fund_units'], row['unit_pur_price'], row['nav'], row['cash']))
     bt_cnx.close()
     return portfolios
 pass
 
-def get_porfolios_by_acct_id(acct_num: int) -> t.list[Portfolio]:
+def get_porfolios_by_acct_id(acct_num: int) -> t.List[Portfolio]:
     portfolios: list[Portfolio] = []
     bt_cnx = get_cnx()
     curs = bt_cnx.cursor(dictionary=True)
@@ -230,7 +227,7 @@ def get_porfolios_by_acct_id(acct_num: int) -> t.list[Portfolio]:
     return portfolios
 pass
 
-def get_portfolio_by_id(stock_id: int) -> t.list[Portfolio]:
+def get_portfolio_by_id(stock_id: int) -> t.List[Portfolio]:
     portfolios: list[Investor] = []
     bt_cnx = get_cnx()
     curs = bt_cnx.curs(dictionary=True)
