@@ -1,0 +1,41 @@
+<!doctype html>
+<title>Best Trade Investors</title>
+<body>
+    <div>
+        <a href="/ui/">Home</a>
+    </div>
+    <div>
+        <h1>Portfolios</h1>    
+    </div>
+    <table>
+        <tr>
+            <th>Stock ID</th>
+            <th>Name</th>
+            <th>Account Number</th>
+            <th>Stock Ticker</th>
+            <th>Stock Quantity</th>
+            <th>Stock Ticker</th>
+            <th>Stock Purchase Price</th>
+            <th>Fund Name</th>
+            <th>Fund Units</th>
+            <th>Fund Units Purchase Price</th>
+            <th>Fund NAV</th>
+            <th>Cash Balance</th>
+        </tr>
+        {% for portfolio in portfolios %}
+        <tr>
+            <td>{{portfolio.stock_id}}</td>
+            <td>{{portfolio.name}}</td>
+            <td>{{account.acct_num}}</td>
+            <td>{{portfolio.stock_tik}}</td>
+            <td>{{portfolio.stock_qty}}</td>
+            <td>{{portfolio.stock_pur_price}}</td>
+            <td>{{portfolio.fund_name}}</td>
+            <td>{{portfolio.fund_units}}</td>
+            <td>{{portfolio.unit_pur_price}}</td>
+            <td>{{portfolio.fund_nav}}</td>
+            <td>{{portfolio.cash_bal}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>

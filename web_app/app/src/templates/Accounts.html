@@ -1,20 +1,20 @@
 <!doctype html>
-<title>Best Trade Accounts</title>
+<title>Best Trade Investors</title>
 <body>
     <div>
         <a href="/ui/">Home</a>
     </div>
     <div>
         <h1>Accounts</h1>    
-    </div> 
-    <<table>
+    </div>
+    <table>
         <tr>
             <th>Investor ID</th>
             <th>Account Number</th>
             <th>Account Balance</th>
             <th>Account Type</th>
         </tr>
-        {% for investor in investors %}
+        {% for account in accounts %}
         <tr>
             <td>{{investor.id}}</td>
             <td>{{account.acct_num}}</td>
